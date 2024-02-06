@@ -3,6 +3,7 @@ import logging
 import mimetypes
 import socket
 import urllib.parse
+import datetime
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 from threading import Thread
@@ -45,7 +46,6 @@ class FrameWork(BaseHTTPRequestHandler):
         self.send_header('Location', '/contact')
         self.end_headers()
 
-        save_data_from_form(data)
 
     def send_html_file(self, filename, status_code=200):  # Corrected method name
         self.send_response(status_code)
@@ -70,10 +70,11 @@ class FrameWork(BaseHTTPRequestHandler):
 def save_data_from_form(data):
     parse_data = urllib.parse.unquote_plus(data.decode())
     try:
-        parse_dict = {key: value for key, value in [el.split('=') for el in parse_data.split('&')]}
+        parse_dict = {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f"): {key: value for key, value in [el.split('=') for el in parse_data.split('&')]}}
 
-        with open('storage/data.json', 'w', encoding='utf-8') as file:
+        with open('storage/data.json', 'a', encoding='utf-8') as file:
             json.dump(parse_dict, file, ensure_ascii=False, indent=4)
+            file.write('\n')
     except ValueError as err:
         logging.error(err)
     except OSError as err:
