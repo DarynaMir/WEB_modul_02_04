@@ -10,12 +10,12 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 
 BASE_DIR = Path(__file__).resolve().parent
 BUFFER_SIZE = 1024
-HTTP_PORT = 8000  # Corrected port number
+HTTP_PORT = 8000
 HTTP_HOST = '0.0.0.0'
 SOCKET_HOST = '127.0.0.1'
 SOCKET_PORT = 4000
 
-jinja = Environment(loader=FileSystemLoader('templates'))  # Fixed loader argument
+jinja = Environment(loader=FileSystemLoader('templates'))
 
 
 class FrameWork(BaseHTTPRequestHandler):
