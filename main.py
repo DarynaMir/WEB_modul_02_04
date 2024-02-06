@@ -1,9 +1,10 @@
+import datetime
 import json
 import logging
 import mimetypes
+import os
 import socket
 import urllib.parse
-import datetime
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 from threading import Thread
@@ -11,10 +12,10 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 
 BASE_DIR = Path(__file__).resolve().parent
 BUFFER_SIZE = 1024
-HTTP_PORT = 8000
+HTTP_PORT = 3000
 HTTP_HOST = '0.0.0.0'
 SOCKET_HOST = '127.0.0.1'
-SOCKET_PORT = 4000
+SOCKET_PORT = 5000
 
 jinja = Environment(loader=FileSystemLoader('templates'))
 
@@ -66,21 +67,38 @@ class FrameWork(BaseHTTPRequestHandler):
         with open(filename, 'rb') as file:
             self.wfile.write(file.read())
 
+def check_storage():
+    storage_dir = 'storage'
+    data_file = os.path.join(storage_dir, 'data.json')
 
+    if not os.path.exists(storage_dir):
+        os.makedirs(storage_dir)
+
+    if not os.path.exists(data_file):
+        with open(data_file, 'w') as f:
+            json.dump([], f)
 def save_data_from_form(data):
     parse_data = urllib.parse.unquote_plus(data.decode())
     try:
-        parse_dict = {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f"): {key: value for key, value in [el.split('=') for el in parse_data.split('&')]}}
+        new_record = {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f"): {key: value for key, value in [el.split('=') for el in parse_data.split('&')]}}
 
-        with open('storage/data.json', 'a', encoding='utf-8') as file:
-            json.dump(parse_dict, file, ensure_ascii=False, indent=4)
-            file.write('\n')
+        with open('storage/data.json', 'r+', encoding='utf-8') as file:
+            try:
+                data = json.load(file)
+            except json.decoder.JSONDecodeError:
+                data = []
+
+            data.append(new_record)
+            file.seek(0)
+            json.dump(data, file, ensure_ascii=False, indent=4)
+            file.truncate()
+
     except ValueError as err:
         logging.error(err)
     except OSError as err:
         logging.error(err)
 
-
+check_storage()
 def run_socket_server(host, port):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_socket.bind((host, port))

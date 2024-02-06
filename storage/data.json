@@ -1,21 +1,20 @@
-{
-    "username": "DarynaMMM",
-    "message": "Hello!"
-}{
-    "2024-02-06 17:13:05.266751": {
-        "username": "HosseMMMM",
-        "message": "MMMMMM"
+[
+    {
+        "2024-02-06 22:55:59.236624": {
+            "username": "Masha",
+            "message": "TEST4!"
+        }
+    },
+    {
+        "2024-02-06 22:56:36.291728": {
+            "username": "Ma",
+            "message": ""
+        }
+    },
+    {
+        "2024-02-06 22:56:48.295821": {
+            "username": "Masha",
+            "message": "TEST5!"
+        }
     }
-}
-{
-    "2024-02-06 17:13:05.267287": {
-        "username": "HosseMMMM",
-        "message": "MMMMMM"
-    }
-}
-{
-    "2024-02-06 17:17:08.285404": {
-        "username": "Daryna",
-        "message": "!!!!!!!"
-    }
-}
+]
